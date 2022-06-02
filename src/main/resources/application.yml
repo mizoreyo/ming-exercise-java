@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    username: root
+    password: '@N6ight1R7aid2'
+    url: jdbc:mysql://localhost:3306/excercise?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+
+mybatis-plus:
+  mapper-locations:
+    - classpath:mapper/*.xml
+
+jwt:
+  secret: mizorelalala
+  expiration: 604800
+  tokenHead: Bearer  #JWT负载中拿到开头
+  tokenHeader: Authorization #JWT存储的请求头

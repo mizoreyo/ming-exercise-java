@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="site.mizore.exercise.dao.QuestionDao">
+    <select id="randomItem" resultMap="questionMap">
+        select * from t_question
+        <where>
+            <if test="questionTypeList!=null">
+                question_type in
+                <foreach collection="questionTypeList" item="questionTypeItem" separator="," open="(" close=")">
+                    #{questionTypeItem}
+                </foreach>
+            </if>
+            <if test="difficultyList!=null">
+                and difficulty in
+                <foreach collection="difficultyList" item="difficultyItem" separator="," open="(" close=")">
+                    #{difficultyItem}
+                </foreach>
+            </if>
+            <if test="subjectNameList!=null">
+                and subject_name in
+                <foreach collection="subjectNameList" item="subjectNameItem" separator="," open="(" close=")">
+                    #{subjectNameItem}
+                </foreach>
+            </if>
+            <if test="gradeLevelList!=null">
+                and grade_level in
+                <foreach collection="gradeLevelList" item="gradeLevelItem" separator="," open="(" close=")">
+                    #{gradeLevelItem}
+                </foreach>
+            </if>
+            and 1=1
+        </where>
+        order by rand() limit ${limit}
+    </select>
+
+    <resultMap id="questionMap" type="site.mizore.exercise.domain.Question">
+        <id column="id" property="id"/>
+        <result column="question_type" property="questionType"/>
+        <result column="question_info" property="questionInfo"/>
+        <result column="answer" property="answer"/>
+        <result column="analysis" property="analysis"/>
+        <result column="difficulty" property="difficulty"/>
+        <result column="subject_id" property="subjectId"/>
+        <result column="subject_name" property="subjectName"/>
+        <result column="grade_level" property="gradeLevel"/>
+        <result column="options" property="options" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+    </resultMap>
+</mapper>
