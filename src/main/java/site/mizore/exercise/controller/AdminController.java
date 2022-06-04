@@ -1,5 +1,6 @@
 package site.mizore.exercise.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import site.mizore.exercise.common.api.CommonResult;
+import site.mizore.exercise.domain.User;
 import site.mizore.exercise.dto.AdminLoginParam;
 import site.mizore.exercise.service.AdminService;
 

@@ -6,13 +6,18 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import site.mizore.exercise.common.api.CommonResult;
 import site.mizore.exercise.domain.Question;
+import site.mizore.exercise.domain.WrongQuestion;
+import site.mizore.exercise.dto.AdminUserDetails;
 import site.mizore.exercise.dto.QuestionParam;
 import site.mizore.exercise.dto.QuestionQueryParam;
 import site.mizore.exercise.service.QuestionService;
+import site.mizore.exercise.service.WrongQuestionService;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +29,9 @@ public class QuestionController {
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private WrongQuestionService wrongQuestionService;
 
     @ApiOperation("根据id获取题目")
     @GetMapping("/{id}")
@@ -97,6 +105,14 @@ public class QuestionController {
         if(question.getAnswer().equals(body.get("response"))) {
             return CommonResult.success(true,"答案正确");
         } else {
+            Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+            AdminUserDetails userDetails= (AdminUserDetails) authentication.getPrincipal();
+            WrongQuestion wrongQuestion=new WrongQuestion();
+            wrongQuestion.setQuestionId(id);
+            wrongQuestion.setQuestionName(question.getQuestionInfo());
+            wrongQuestion.setUserId(userDetails.getId());
+            wrongQuestion.setWrongAnswer(body.get("response"));
+            wrongQuestionService.save(wrongQuestion);
             return CommonResult.failed("答案错误");
         }
     }

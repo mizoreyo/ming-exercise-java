@@ -19,6 +19,7 @@ public class PaperQuestion {
         return paperQuestions;
     }
 
+    private String trueAnswer;
     private Long questionId;
     private String userAnswer;
     private Integer questionScore;

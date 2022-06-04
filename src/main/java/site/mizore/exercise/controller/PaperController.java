@@ -1,8 +1,10 @@
 package site.mizore.exercise.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +16,7 @@ import site.mizore.exercise.domain.PaperQuestion;
 import site.mizore.exercise.domain.Question;
 import site.mizore.exercise.dto.AdminUserDetails;
 import site.mizore.exercise.dto.CreatePaperParam;
+import site.mizore.exercise.dto.PaperParam;
 import site.mizore.exercise.dto.QuestionQueryParam;
 import site.mizore.exercise.service.PaperService;
 import site.mizore.exercise.service.QuestionService;
@@ -99,5 +102,65 @@ public class PaperController {
             return CommonResult.failed();
         }
     }
-    
+
+    @ApiOperation("批改试卷")
+    @PostMapping("/scoring")
+    public CommonResult scoring(@RequestBody Paper paper) {
+        Integer score= paperService.scoring(paper);
+        return CommonResult.success(score);
+    }
+
+    @ApiOperation("获取已完成的试卷page")
+    @GetMapping("/uncomp/page")
+    public CommonResult getUncompPage(@RequestParam(value = "p",defaultValue = "1") Integer pageNum,
+                                      @RequestParam(value = "size",defaultValue = "10") Integer pageSize) {
+        Page<Paper> page=new Page<>(pageNum,pageSize);
+        QueryWrapper<Paper> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("complete",1);
+        Page result=paperService.page(page,queryWrapper);
+        return CommonResult.success(result);
+    }
+
+    @ApiOperation("根据id获取试卷")
+    @GetMapping("/{id}")
+    public CommonResult getItem(@PathVariable("id") Long id) {
+        Paper paper= paperService.getById(id);
+        return CommonResult.success(paper);
+    }
+
+    @ApiOperation("删除试卷")
+    @DeleteMapping("/{id}")
+    public CommonResult deleteItem(@PathVariable("id") Long id) {
+        boolean result=paperService.removeById(id);
+        if(result) {
+            return CommonResult.success(result);
+        } else {
+            return CommonResult.failed();
+        }
+    }
+
+    @ApiOperation("修改试卷")
+    @PutMapping("/{id}")
+    public CommonResult updateItem(@PathVariable("id") Long id,
+                                   @RequestBody PaperParam paperParam) {
+        Paper paper=new Paper();
+        BeanUtils.copyProperties(paperParam,paper);
+        paper.setId(id);
+        boolean result=paperService.updateById(paper);
+        if(result) {
+            return CommonResult.success(result);
+        } else {
+            return CommonResult.failed();
+        }
+    }
+
+    @ApiOperation("获取试卷分页")
+    @GetMapping("/page")
+    public CommonResult getPage(@RequestParam(value = "p",defaultValue = "1") Integer pageNum,
+                                @RequestParam(value = "size",defaultValue = "10") Integer pageSize) {
+        Page<Paper> page=new Page<>(pageNum,pageSize);
+        Page<Paper> result=paperService.page(page);
+        return CommonResult.success(result);
+    }
+
 }
