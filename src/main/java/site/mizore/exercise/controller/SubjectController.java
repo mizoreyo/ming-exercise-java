@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import site.mizore.exercise.common.api.CommonResult;
@@ -27,6 +28,7 @@ public class SubjectController {
         return CommonResult.success(subject);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation("增加学科")
     @PostMapping
     public CommonResult create(@RequestBody @Validated SubjectParam subjectParam) {
@@ -40,6 +42,7 @@ public class SubjectController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation("根据id修改学科")
     @PutMapping("/{id}")
     public CommonResult update(@PathVariable("id") Long id,
@@ -55,6 +58,7 @@ public class SubjectController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation("根据id删除学科")
     @DeleteMapping("/{id}")
     public CommonResult deleteItem(@PathVariable("id") Long id) {

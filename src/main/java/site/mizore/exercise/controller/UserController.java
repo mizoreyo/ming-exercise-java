@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import site.mizore.exercise.common.api.CommonResult;
@@ -32,6 +33,7 @@ public class UserController {
         return CommonResult.success(result);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation("增加用户")
     @PostMapping
     public CommonResult create(@RequestBody UserParam userParam) {
@@ -46,6 +48,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation("删除用户")
     @DeleteMapping("/{id}")
     public CommonResult deleteItem(@PathVariable("id") Long id) {
@@ -57,6 +60,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation("更新用户")
     @PutMapping("/{id}")
     public CommonResult updateItem(@PathVariable("id") Long id,

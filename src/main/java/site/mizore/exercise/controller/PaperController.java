@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -128,6 +129,7 @@ public class PaperController {
         return CommonResult.success(paper);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation("删除试卷")
     @DeleteMapping("/{id}")
     public CommonResult deleteItem(@PathVariable("id") Long id) {
@@ -139,6 +141,7 @@ public class PaperController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation("修改试卷")
     @PutMapping("/{id}")
     public CommonResult updateItem(@PathVariable("id") Long id,

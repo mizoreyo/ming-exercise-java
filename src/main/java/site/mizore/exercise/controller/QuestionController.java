@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +41,7 @@ public class QuestionController {
         return CommonResult.success(question);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation("增加题目")
     @PostMapping
     public CommonResult create(@RequestBody @Validated QuestionParam questionParam) {
@@ -53,6 +55,7 @@ public class QuestionController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation("根据id修改题目")
     @PutMapping("/{id}")
     public CommonResult update(@PathVariable("id") Long id,
@@ -68,6 +71,7 @@ public class QuestionController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation("根据id删除题目")
     @DeleteMapping("/{id}")
     public CommonResult deleteItem(@PathVariable("id") Long id) {
