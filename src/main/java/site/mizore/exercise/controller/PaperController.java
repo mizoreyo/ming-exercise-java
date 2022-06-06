@@ -117,7 +117,10 @@ public class PaperController {
                                       @RequestParam(value = "size",defaultValue = "10") Integer pageSize) {
         Page<Paper> page=new Page<>(pageNum,pageSize);
         QueryWrapper<Paper> queryWrapper=new QueryWrapper<>();
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        AdminUserDetails userDetails= (AdminUserDetails) authentication.getPrincipal();
         queryWrapper.eq("complete",1);
+        queryWrapper.eq("user_id",userDetails.getId());
         Page result=paperService.page(page,queryWrapper);
         return CommonResult.success(result);
     }
